@@ -4,7 +4,7 @@ int calcularMediana(int cont, int valores[]);
 
 int main()
 {
-    const int MAX = 10000, PARADA = 99999;
+    const int MAX = 90000, PARADA = 99999;
     int valores[MAX];
     int valorActual, valorAnterior = 0;
     long sumatoria = 0;
