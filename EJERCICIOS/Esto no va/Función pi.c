@@ -93,7 +93,7 @@ return 0;
 
 /* Función: pi
    Argumento: (int) nterm, cantidad de términos a evaluar de la serie
-   Pi.
+   Pi
    Objetivo: Evaluar "nterm" terminos de la serie pi.
    Retorno: (float) Resultado de la evaluación de la serie pi para "nterm".
 */
