@@ -29,10 +29,14 @@ int main()
 {
     int cantClientes = 0;
     char option; 
+    float factMin;
 
     Clientes *listadoFactura = (Clientes*)malloc(sizeof(Clientes)*cantClientes); // Se reserva la cantidad de clientes a facturar.
 
     printf("\n\tPROGRAMA DE FACTURACIÓN DE CLIENTES\n");
+
+    printf("\n\tIngrese factura mínima (precio): ");
+    scanf("%f", &factMin);
 
     do 
     {
@@ -45,21 +49,27 @@ int main()
             listadoFactura = (Clientes*)realloc(listadoFactura, sizeof(Clientes)*cantClientes); //  Se añade nuevo cliente 
             printf("\n\t\tGenerando Cliente...");
             Facturacion(cantClientes - 1, listadoFactura); //   Se le resta uno para que no comience un espacio después
+        
+
+            MostrarClientes(cantClientes, listadoFactura);
+        
+            printf("\n\t\t-- CLIENTES EN ESTADO MOROSO --\n");
+            MostrarClientesMorosos(cantClientes, listadoFactura);
+
+            printf("\n\t\t-- CLIENTES EN ESTADO PAGADO --\n");
+            MostrarClientesPagados(cantClientes, listadoFactura, factMin);
         }
-
-        MostrarClientes(cantClientes, listadoFactura);
-        MostrarClientesMorosos(cantClientes, listadoFactura);
-
-        printf("\n\t-- CLIENTES EN ESTADO MOROSO --\n");
 
     }while(option != 'n');
 
     printf("\n\tVUELVA PRONTO !!\n");
 
-    free(listadoFactura);
+    free(listadoFactura); // Libero la memoria que reservé
 
     return 0;
 }
+
+// Escaneo los clientes con sus datos //
 
 void Facturacion(int ind, Clientes *listadoFactura)
 {
@@ -79,6 +89,8 @@ void Facturacion(int ind, Clientes *listadoFactura)
 
 }
 
+// Muestro los clientes con todos sus datos //
+
 void MostrarClientes(int cantidadClientes, Clientes *listadoFactura)
 {
     int ind;
@@ -97,13 +109,30 @@ void MostrarClientes(int cantidadClientes, Clientes *listadoFactura)
 
 }
 
+// Muestro los clientes en estado "Moroso" // 
 
 void MostrarClientesMorosos(int cantidadClientes, Clientes *listadoFactura)
 {
     for(int ind = 0; ind < cantidadClientes; ind++)
     {
-        if (strcmp((listadoFactura+ind)->estado, "Moroso") == 0)
-            printf("%s", (*(listadoFactura+ind)).nombre);
+        if (strcmp((listadoFactura+ind)->estado, "Moroso") == 0) // Verifica los clientes en estado Moroso
+            printf("\n\t\t\t\t%s\n", (*(listadoFactura+ind)).nombre); //Los imprime.
     }
 
+}
+
+// Muestro los clientes en estado "Pagado" con factura mayor
+
+void MostrarClientesPagados(int cantidadClientes, Clientes *listadoFactura, float factMin)
+{
+    int ind;
+
+    for(ind = 0; ind < cantidadClientes; ind++)
+    {
+        if (strcmp((listadoFactura+ind)->estado, "Pagado") == 0)  // Primero verifica si el cliente ingresado tiene un estado "Pagado"
+        {
+            if((listadoFactura+ind)->precio > factMin) // Luego verifica si su monto es mayor al mínimo
+                printf("\n\t\t\t\t%s\n", (*(listadoFactura+ind)).nombre); // Si es mayor, lo imprime.
+        }
+    }
 }
