@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*
 
@@ -47,8 +48,9 @@ int main()
         }
 
         MostrarClientes(cantClientes, listadoFactura);
+        MostrarClientesMorosos(cantClientes, listadoFactura);
 
-        printf("\n\t-- CLIENTES EN ESTADO MOROSO --\n")
+        printf("\n\t-- CLIENTES EN ESTADO MOROSO --\n");
 
     }while(option != 'n');
 
@@ -92,5 +94,16 @@ void MostrarClientes(int cantidadClientes, Clientes *listadoFactura)
 
     printf("\n\n");
         
+
+}
+
+
+void MostrarClientesMorosos(int cantidadClientes, Clientes *listadoFactura)
+{
+    for(int ind = 0; ind < cantidadClientes; ind++)
+    {
+        if (strcmp((listadoFactura+ind)->estado, "Moroso") == 0)
+            printf("%s", (*(listadoFactura+ind)).nombre);
+    }
 
 }
