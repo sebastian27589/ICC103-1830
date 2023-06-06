@@ -93,10 +93,9 @@ void Facturacion(int ind, Clientes *listadoFactura)
 
 void MostrarClientes(int cantidadClientes, Clientes *listadoFactura)
 {
-    int ind;
 
     printf("\n\t\tNOMBRE    ||    UNIDADES     ||       PRECIO      ||       ESTADO      ");
-    for(ind = 0; ind < cantidadClientes; ind++)
+    for(int ind = 0; ind < cantidadClientes; ind++)
     {
         printf("\n\t\t%s      ||     %d     ||      %.2f      ||      %s      ", (*(listadoFactura+ind)).nombre,
                                                                                 (*(listadoFactura+ind)).unidades,
