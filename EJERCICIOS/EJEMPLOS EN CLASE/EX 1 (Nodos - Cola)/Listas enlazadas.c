@@ -5,7 +5,7 @@
 typedef struct sNodo
 {
     int data;
-    struct sNodo *enlace;
+    struct sNodo *enlace; //Así se crea un nodo.
 }Nodo;
 
 Nodo* EliminarElemento(Nodo *listaEnlazada, int elemento);
