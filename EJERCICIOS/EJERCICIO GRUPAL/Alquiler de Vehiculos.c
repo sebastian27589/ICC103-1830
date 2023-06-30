@@ -40,8 +40,7 @@ int main()
 {
 
     char rutaClientes[] = "clientes.bin";
-    char rutaAutomoviles[] = "automoviles.bin";
-    char rutaAlquiler[] = "alquiler.bin";
+
 
     Cliente cliente;
     Automovil automovil;
