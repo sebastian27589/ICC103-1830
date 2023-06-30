@@ -166,7 +166,6 @@ void mostrarClientes(FILE *archivoClientes)
     {
         fread(&clienteActual, sizeof(Cliente), 1, archivoClientes);
 
-        //if(strcmp(clienteActual.ciudad, ciudadFiltro) == 0)
         printf("\nID: %d\nNombre: %s\nCiudad: %s\n",
         clienteActual.id, clienteActual.nombre, clienteActual.ciudad);
     }
