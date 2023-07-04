@@ -518,7 +518,7 @@ void VerPasajerosdeUnConcho(int ind, Servicio* ListadoServicio, Pasajeros* Lista
     for(i = 0; i < ind; i++) 
     {
         if (strcmp(fiches, (ListadoServicio + i)->ficha) == 0)
-        { //AGREGAR EL LISTADOCONCHO -> && (ListadoConcho+i)->ficha ==(ListadoServicio+i)->ficha)
+        { 
 
             if( (ListaPasajeros + i)->ID == (ListadoServicio + i)->cliente)
             {
