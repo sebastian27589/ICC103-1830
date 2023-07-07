@@ -41,7 +41,7 @@ void MostrarRangoRecursivo(int LimI, int LimS, int ValorActual)
     printf("%d\t", ValorActual);
 
     // Llamada recursiva (con un cambio).
-    MostraRangoRecursivo(LimI, LimS, ValorActual + 1);
+    MostrarRangoRecursivo(LimI, LimS, ValorActual + 1);
 
     // Ahora imprimo otra cosa:
     printf("\n Mitad: %d\t", ValorActual / 2);
