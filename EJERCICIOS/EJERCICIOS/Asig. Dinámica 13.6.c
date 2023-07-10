@@ -10,6 +10,7 @@
     no lo hace, porque lo inicializa en 0, es decir NULL.
 
     Y realloc, se encarga de incrementar esa cantidad alojada luego de calloc / malloc.
+    
 */
 
 int main()

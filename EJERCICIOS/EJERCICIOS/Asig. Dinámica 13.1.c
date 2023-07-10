@@ -10,7 +10,6 @@
 
     p = n*malloc(sizeof(int));
 
-
     R: En vez de char** dob, sería char *dob.
     Y en el puntero sería: p = malloc(n*sizeof(int)).
 */
