@@ -9,6 +9,7 @@
     leídas las cadenas se debe realizar un proceso que consiste en eliminar todos los blancos,
     siempre manteniendo el espacio ocupado ajustado al número de caracteres. El programa
     debe mostrar las cadenas leídas y las cadenas transformadas.
+    
 */
 
 void SuprimirEspacio(char[]);

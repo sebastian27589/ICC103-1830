@@ -40,7 +40,6 @@ int main()
 void GenerarMatriz(int **mat)
 {
     //printf("\nIngrese los elementos de la matriz:");
-
     for (int i = 0; i < 5; i++)
     {
         for (int j = 0; j < 5; j++)

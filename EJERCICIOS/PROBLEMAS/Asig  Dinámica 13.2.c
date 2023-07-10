@@ -6,6 +6,7 @@
     El almacenamiento de un número grande se ha de hacer en una estructura que tenga un array dinámico
     y otro campo con el número de dígitos. La suma de dos números grandes dará como resultado otro
     número grande representado en su correspondiente estrcutura. 
+    
 */
 
 typedef struct 
