@@ -31,6 +31,7 @@ int main()
     printf("5. Círculo\n");
     printf("Opción: ");
     //scanf("%d", &opcion);
+    
     // Verificar respuesta
     do
     {

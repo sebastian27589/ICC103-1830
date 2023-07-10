@@ -7,7 +7,6 @@
     evalue dichas funciones, utilizar un array de punteros a función.
 
     Las funciones son las siguientes:
-
     f(x) = 3*e-2x
     g(x) = -x*sin(x) + 1.5
     z(x) = x^2 - 2x + 3

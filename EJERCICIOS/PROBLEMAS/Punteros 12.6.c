@@ -13,7 +13,6 @@ int main()
 {
     char *str = {"25.56"};
     float NumReal = ConvertirReal(str);
-
     printf("\nValor de la cadena: %s \t Valor real: %f", str, NumReal);
 
     return 0;

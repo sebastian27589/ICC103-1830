@@ -6,7 +6,6 @@
 
     Escriba un programa en el que se lean 20 líneas de texto, cada línea con un máximo de 80 carácteres.
     Mostrar por pantalla el número de vocales que tiene cada línea.
-
 */
 
 int NumVocales(char *);
