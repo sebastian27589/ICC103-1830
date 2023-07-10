@@ -9,20 +9,45 @@
 
 */
 
+int NumVocales(char *);
+
 int main()
 {
-    char *textline[81];
-    const int MAXCHAR = 20;
+    const int MAXCHAR = 81, MAXLINE = 20;
+    char textline[MAXLINE][MAXCHAR];
+    //const int MAXCHAR = 81;
 
-    printf("Escriba 20 líneas de texto que contengan un máximo de 80 carácteres cada uno.")
-    for (int ind = 0; *(maxline+ind); ind++)
+    int cont = 19;
+
+    printf("\nEscriba 20 líneas de texto que contengan un máximo de 80 carácteres cada uno.");
+    printf("Comience aquí (20): ");
+    for (int ind = 0; ind < MAXLINE; ind++)
     {
-        fgets();
-        if ( *(maxline+ind) > MAXCHAR)
-        {
-            printf("Las línes no pueden contener mas de 80 carácteres.");
-        }
+        fgets(textline[ind], MAXCHAR, stdin);
+
+        int CantVocales = NumVocales(textline[ind]);
+
+        printf("Esta línea tiene: %d vocales.\n", CantVocales);
+        printf("\nDigite la siguiente línea (%d): ", cont--);
     }
 
     return 0;
+}
+
+int NumVocales(char *str)
+{
+    int cont = 0;
+    //char caracter = *str;
+
+    while (*str != '\0')
+    {
+        char caracter = *str;
+        if (caracter == 'a' || caracter == 'e' || caracter == 'i'
+            || caracter == 'o' || caracter == 'u')
+            cont++;
+
+        str++;
+    }
+
+    return cont;
 }
