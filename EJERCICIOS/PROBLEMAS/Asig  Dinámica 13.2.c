@@ -21,27 +21,34 @@ int main()
     NumLargo num1, num2, suma;
     int cantDigitos;
 
-    printf("Digite primer número grande: \n");
+    printf("\nDigite primer número grande. \n");
     printf("Cantidad de dígitos: ");
     scanf("%d", &cantDigitos);
 
     num1.arr = (int*)malloc(cantDigitos * sizeof(int));
     num1.numDigit = cantDigitos;
 
-    printf("\nIngrese sus dígitos: ");
+    printf("\nIngrese sus dígitos: \n ");
     for (int ind = 0; ind < cantDigitos; ind++)
+    {
+        printf("Digito [%d]: ", ind + 1);
         scanf("%d", &num1.arr[ind]);
+    }
+        
     
-    printf("\n\nDigite segundo número grande: \n");
+    printf("\n\nDigite segundo número grande. \n");
     printf("Cantidad de dígitos: ");
     scanf("%d", &cantDigitos);
 
     num2.arr = (int*)malloc(cantDigitos * sizeof(int));
     num2.numDigit = cantDigitos;
 
-    printf("\nIngrese sus dígitos: ");
+    printf("\nIngrese sus dígitos: \n");
     for (int ind = 0; ind < cantDigitos; ind++)
+    {
+        printf("Digito [%d]: ", ind + 1);
         scanf("%d", &num2.arr[ind]);
+    }
 
     suma = SumarNumeros(num1, num2);
 

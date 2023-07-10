@@ -1,68 +1,77 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-struct fecha {
-    int dia;
-    int mes;
-    int anio;
-};
+/*
+    Se desea escribir un programa para leer números grandes y obtener la suma de ellos.
+    El almacenamiento de un número grande se ha de hacer en una estructura que tenga un array dinámico
+    y otro campo con el número de dígitos. La suma de dos números grandes dará como resultado otro
+    número grande representado en su correspondiente estrcutura. 
+*/
 
-int esBisiesto(int anio) {
-    if ((anio % 4 == 0 && anio % 100 != 0) || anio % 400 == 0) {
-        return 1; // Es bisiesto
-    } else {
-        return 0; // No es bisiesto
+typedef struct 
+{
+    int numDigit;
+    int* arr;
+} NumLargo;
+
+NumLargo SumarNumeros(NumLargo, NumLargo);
+
+int main()
+{
+    NumLargo num1, num2, suma;
+    int cantDigitos;
+
+    printf("\nDigite primer número grande. \n");
+    printf("Cantidad de dígitos: ");
+    scanf("%d", &cantDigitos);
+
+    num1.arr = (int*)malloc(cantDigitos * sizeof(int));
+    num1.numDigit = cantDigitos;
+
+    printf("\nIngrese sus dígitos: \n ");
+    for (int ind = 0; ind < cantDigitos; ind++)
+    {
+        printf("Digito [%d]: ", ind + 1);
+        scanf("%d", &num1.arr[ind]);
     }
-}
-
-int obtenerDiasDelMes(int mes, int anio) {
-    int diasDelMes[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    if (mes == 2 && esBisiesto(anio)) {
-        return 29; // Febrero en año bisiesto
-    } else {
-        return diasDelMes[mes - 1];
-    }
-}
-
-int calcularDiferencia(struct fecha fecha1, struct fecha fecha2) {
-    int dias = 0;
-
-    // Calcula los días completos de los años completos entre las fechas
-    for (int i = fecha1.anio; i < fecha2.anio; i++) {
-        if (esBisiesto(i)) {
-            dias += 366;
-        } else {
-            dias += 365;
-        }
-    }
-
-    // Calcula los días de los meses completos en el año de la fecha1
-    for (int i = fecha1.mes; i <= 12; i++) {
-        dias += obtenerDiasDelMes(i, fecha1.anio);
-    }
-
-    // Calcula los días de los meses completos en el año de la fecha2
-    for (int i = 1; i < fecha2.mes; i++) {
-        dias += obtenerDiasDelMes(i, fecha2.anio);
-    }
-
-    // Resta los días de la fecha1 y fecha2
-    dias += fecha2.dia - fecha1.dia;
-
-    return dias;
-}
-
-int main() {
-    struct fecha fecha1, fecha2;
+        
     
-    printf("Ingrese la primera fecha (dd mm aaaa): ");
-    scanf("%d %d %d", &fecha1.dia, &fecha1.mes, &fecha1.anio);
-    
-    printf("Ingrese la segunda fecha (dd mm aaaa): ");
-    scanf("%d %d %d", &fecha2.dia, &fecha2.mes, &fecha2.anio);
-    
-    int diferencia = calcularDiferencia(fecha1, fecha2);
-    
-    printf("La diferencia en días entre las fechas es: %d\n", diferencia);
+    printf("\n\nDigite segundo número grande. \n");
+    printf("Cantidad de dígitos: ");
+    scanf("%d", &cantDigitos);
+
+    num2.arr = (int*)malloc(cantDigitos * sizeof(int));
+    num2.numDigit = cantDigitos;
+
+    printf("\nIngrese sus dígitos: \n");
+    for (int ind = 0; ind < cantDigitos; ind++)
+    {
+        printf("Digito [%d]: ", ind + 1);
+        scanf("%d", &num2.arr[ind]);
+    }
+
+    suma = SumarNumeros(num1, num2);
+
+    printf("La suma de los números grandes es: ");
+    for (int ind = 0; ind < suma.numDigit; ind++)
+        printf("%d", suma.arr[ind]);
     
     return 0;
+}
+NumLargo SumarNumeros(NumLargo num1, NumLargo num2)
+{
+    NumLargo suma;
+    int carry = 0; // Llevamos el acarreo al sumar los dígitos
+    suma.arr = (int*)malloc((num1.numDigit + 1) * sizeof(int)); 
+    suma.numDigit = num1.numDigit + 1;
+
+    // Suma dígito a dígito
+    for (int i = num1.numDigit - 1; i >= 0; i--) {
+        int digitSuma = num1.arr[i] + num2.arr[i] + carry;
+        suma.arr[i + 1] = digitSuma % 10; // El dígito se guarda en la posición correspondiente en el array
+        carry = digitSuma / 10; // Calculamos el acarreo para la siguiente suma
+    }
+
+    suma.arr[0] = carry; 
+    return suma;
 }
