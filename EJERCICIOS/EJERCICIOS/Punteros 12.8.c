@@ -7,6 +7,7 @@ int main()
 
     P: ¿Qué diferencia se puede encontrar entre estas dos declaraciones?
 
+
     float  mt[5][5];
     float *m[5];
 

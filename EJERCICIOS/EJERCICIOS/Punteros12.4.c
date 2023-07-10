@@ -8,6 +8,7 @@ int main()
     para indexar un array bidimensional?
 
     R: Con un doble puntero **array o un puntero a un arreglo (*array)
+    
     */
    
     return 0;

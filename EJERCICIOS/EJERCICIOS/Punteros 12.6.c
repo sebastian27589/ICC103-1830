@@ -5,6 +5,7 @@
 Escribir una función con un argumento de tipo puntero a double y otro argumento de tipo int.
 El primer argumento se debe de corresponder con un array y el segundo con el núm de elementos de un array.
 La función ha de ser de tipo puntero a double para devolver la dirección del elemento menor. 
+
 */
 
 double* ElementoMenor(double*, int);
