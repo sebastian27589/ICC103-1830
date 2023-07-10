@@ -11,6 +11,8 @@ typedef struct sNodo
     struct sNodo *link;
 }Nodo;
 
+// OJO: EN ESTE EJERCICIO SOLO ESCRIBI LA FUNCIÓN COMO PEDIA
+
 Nodo* BorrarNodo(Nodo *ListaEnlazada, int pos)
 {
     Nodo *Anterior = ListaEnlazada, *Temp;
@@ -32,6 +34,6 @@ Nodo* BorrarNodo(Nodo *ListaEnlazada, int pos)
 
     Temp = Anterior->link;
     Anterior->link = Temp->link;
-    free(Temp);
+
     return ListaEnlazada;
 }

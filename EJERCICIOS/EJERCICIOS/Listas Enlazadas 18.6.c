@@ -7,58 +7,49 @@
     al campo dato, con los valores reales de la lista simple.
 */
 
-typedef struct sDoubleNode
+typedef struct sNodo
 {
     double data;
-    struct sDoubleNode* prev;
-    struct sDoubleNode* next;
-} DoubleNode;
+    struct sNodo* anterior;
+    struct sNodo* siguiente;
+}Nodo;
 
-void InsertInOrder(DoubleNode** head, double value) 
+void InsertarDobleEnlazada(Nodo* cabeza)
 {
-    DoubleNode* newNode = (DoubleNode*)malloc(sizeof(DoubleNode));
-    newNode->data = value;
-    newNode->prev = NULL;
-    newNode->next = NULL;
+    int nuevoValor;
+    Nodo* nodoActual = cabeza, *nodoAnterior = NULL;
 
-    if (*head == NULL) 
+    printf("Valor del nodo: \n");
+    scanf("%d", &nuevoValor);
+
+    Nodo* nuevoNodo = (Nodo*)malloc(sizeof(Nodo));
+    nuevoNodo->data = nuevoValor;
+    nuevoNodo->anterior = NULL;
+    nuevoNodo->siguiente = NULL;
+
+    // Si la lista está vacía
+    if (cabeza == NULL)
+        return cabeza;
+    
+    while(nodoActual != NULL )
     {
-        // La lista está vacía, el nuevo nodo se convierte en el primer y único nodo
-        *head = newNode;
-        return;
+        nodoAnterior = nodoActual;
+        nodoActual = nodoActual->siguiente;
     }
 
-    if (value < (*head)->data) 
+    if(nodoAnterior == NULL)
     {
-        // El nuevo nodo debe ser el nuevo nodo cabeza de la lista
-        newNode->next = *head;
-        (*head)->prev = newNode;
-        *head = newNode;
-        return;
+        nuevoNodo->siguiente = cabeza;
+        cabeza->anterior = nuevoNodo;
+        cabeza = nuevoNodo;
     }
-
-    DoubleNode* current = *head;
-
-    while (current->next != NULL && current->next->data < value) 
+    else
     {
-        current = current->next;
-    }
+        nodoAnterior->siguiente = nuevoNodo;
+        nuevoNodo->anterior = nodoAnterior;
+        nuevoNodo->siguiente = nodoActual;
 
-    newNode->next = current->next;
-    newNode->prev = current;
-    if (current->next != NULL) 
-    {
-        current->next->prev = newNode;
-    }
-    current->next = newNode;
-}
-
-void CreateDoubleListFromSingle(DoubleNode** doubleList, SingleNode* singleList) 
-{
-    SingleNode* current = singleList;
-
-    while (current != NULL) {
-        InsertInOrder(doubleList, current->data);
-        current = current->next;
+        if (nodoActual != NULL)
+            nodoActual->anterior = nuevoNodo;
     }
 }

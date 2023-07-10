@@ -20,24 +20,15 @@ typedef struct sAlumno
     struct sAlumno *link;
 }Alumno;
 
-void TransformarLista(Alumno **ListaEnlazada);
+Alumno* TransformarLista(Alumno *ListaEnlazada);
 
-int main()
+Alumno* TransformarLista(Alumno *ListaEnlazada)
 {
-    Alumno *ListaEnlazada = NULL;
-
-    TransformarLista(&ListaEnlazada);
-
-    return 0;
-}
-
-void TransformarLista(Alumno **ListaEnlazada)
-{
-    if (*ListaEnlazada == NULL)
+    if (ListaEnlazada == NULL)
         return ListaEnlazada;
     
-    Alumno *Actual = *ListaEnlazada;
-    Alumno *Sig = (*ListaEnlazada)->link;
+    Alumno *Actual = ListaEnlazada;
+    Alumno *Sig = ListaEnlazada->link;
 
     while (Actual != NULL && Sig != NULL)
     {
@@ -46,33 +37,35 @@ void TransformarLista(Alumno **ListaEnlazada)
         {
             Actual = Sig->link;
             if (Actual == NULL)
-            {
+                Sig = NULL;
+            else
                 Sig = Actual->link;
-            }
 
         // Si es Femenino -> Masculino, se intercambian los nodos
-        } else if (Actual->sexo == 'F' && Sig->sexo == "M") {
-
+        } else if (Actual->sexo == 'F' && Sig->sexo == 'M') 
+        {
             Alumno *Temp = Actual->link;
             Actual->link = Sig->link;
             Sig->link = Actual;
-            
-            if(*ListaEnlazada == Actual)
-            {
-                *ListaEnlazada = Sig;
-            }
-
+        
+            if(ListaEnlazada == Actual)
+                ListaEnlazada = Sig;
+                
             Actual = Temp;
             if (Actual != NULL)
-            {
                 Sig = Actual->link;
-            }
-        } else {
+            else
+                Sig = NULL;
 
+        } else 
+        {
             // Si no se cumple el patrón esperado, se avanza al siguiente
             Actual = Sig;
-            Sig = (Actual != NULL) ? Actual->link : NULL;
-
+            if (Actual != NULL)
+                Sig = Actual->link;
+            else
+                Sig = NULL;
+            //Sig = (Actual != NULL) ? Actual->link : NULL;
         }
     }
 }
