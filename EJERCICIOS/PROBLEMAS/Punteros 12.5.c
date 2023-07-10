@@ -36,6 +36,7 @@ void Suma(char *str1, char *str2)
     char *resultado;
 
     // Determinar longitud maxima
+    
     if (longitud1 > longitud2) 
         longitudMaxima = longitud1;
     else

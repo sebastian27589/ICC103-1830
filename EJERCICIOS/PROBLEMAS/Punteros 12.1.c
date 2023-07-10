@@ -15,6 +15,7 @@ int main()
 {
     const int MAXCHAR = 81, MAXLINE = 20;
     char textline[MAXLINE][MAXCHAR];
+
     //const int MAXCHAR = 81;
 
     int cont = 19;
