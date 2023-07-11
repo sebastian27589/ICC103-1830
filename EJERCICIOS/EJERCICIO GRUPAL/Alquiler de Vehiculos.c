@@ -1,5 +1,5 @@
 /*
-    ESTUDIANTESSS:
+    ESTUDIANTES:
 
     NICOL SÁNCHEZ    -  ID: 1015-1785
     SEBASTIÁN MIGUEL -  ID: 1014-8026
@@ -31,26 +31,39 @@ typedef struct
     float precio;
 }Alquiler;
 
+
+// Menues
 int mostrarMenu();
 int mostrarMenu2();
 int mostrarMenu3();
-void mostrarAutomoviles(FILE*);
+
+// Capturas
 void capturarCliente(FILE*, Cliente*);
 void capturarAutomovil(FILE*, Automovil*);
-void capturarAlquilar(FILE*, Alquiler*);
-void mostrarClientes(FILE*);
+void capturarAlquiler(FILE*, Alquiler*);
+
+// Automoviles
+void mostrarAutomoviles(FILE*);
+void mostrarAutomovilesMarca(FILE*, char*);
+void mostrarAutomovilAlquilerMayorUnaSemana(FILE*);
+void mostrarAutomovilAlquilerEntreUnaSemanaDiezDias(FILE*);
+void mostrarAutomovilAlquilerMayorDiezMil(FILE*);
+
+// Clientes
+void mostrarClientes(int, FILE*, FILE*);
 void mostrarClientes_Sant(FILE *);
 void mostrarClientes_Alquileres(FILE *);
+void mostrarClientes_EntreDiezDias(FILE*);
 void mostrarClientes_Alquiler_Precio(FILE *);
 
 int main() 
 {
 
-    char rutaClientes[] = "clientes.bin";
+    char rutaClientes[] = "clientes.bin", marca[30];
     Cliente cliente;
     Automovil automovil;
     Alquiler alquiler;
-    int opcion, opcion2, opcion3;
+    int opcion, opcion2, opcion3, idAutomovil;
 
 
     FILE *archivoClientes = fopen(rutaClientes, "a+b");
@@ -73,7 +86,7 @@ int main()
                 capturarAutomovil(archivoAutomoviles, &automovil);
                 break;
             case 3:
-                capturarAlquilar(archivoAlquiler, &alquiler);
+                capturarAlquiler(archivoAlquiler, &alquiler);
                 break;
             case 4:
                 opcion2 = mostrarMenu2();
@@ -81,7 +94,10 @@ int main()
                 switch(opcion2)
                 {
                     case 1:
-                        mostrarClientes(archivoClientes);
+                        //int idAutomovil;
+                        printf("\nIngrese ID del automovil que desea ver: ");
+                        scanf("%d", &idAutomovil);
+                        mostrarClientes(idAutomovil, archivoAlquiler, archivoClientes);
                         break;
                     case 2:
                         mostrarClientes_Sant(archivoClientes);
@@ -90,11 +106,11 @@ int main()
                         mostrarClientes_Alquileres(archivoAlquiler);
                         break;
                     case 4:
+                        mostrarClientes_EntreDiezDias(archivoAlquiler);
                         break;
                     case 5:
                         mostrarClientes_Alquiler_Precio(archivoAlquiler);
                         break;
-
                 }
                 break;
 
@@ -104,11 +120,24 @@ int main()
                 switch (opcion3) 
                 {
                     case 1:
-                    mostrarAutomoviles(archivoAutomoviles);
-                    break;
+                        mostrarAutomoviles(archivoAutomoviles);
+                        break;
+                    case 2:
+                        printf("Ingrese la marca del automóvil: ");
+                        scanf("%s", marca);
+                        mostrarAutomovilesMarca(archivoAutomoviles, marca);
+                        break;
+                    case 3:
+                        mostrarAutomovilAlquilerMayorUnaSemana(archivoAlquiler);
+                        break;
+                    case 4:
+                        mostrarAutomovilAlquilerEntreUnaSemanaDiezDias(archivoAlquiler);
+                        break;
+                    case 5:
+                        mostrarAutomovilAlquilerMayorDiezMil(archivoAlquiler);
+                        break;
                 }
                 break;
-
         }
 
     } while (opcion != 0);
@@ -142,29 +171,7 @@ void capturarAutomovil(FILE* archivoAutomoviles, Automovil *automovil)
     fwrite(automovil, sizeof(Automovil), 1, archivoAutomoviles);
 }
 
-
-void mostrarAutomoviles(FILE *archivoAutomovil)
-{
-    Automovil automovilActual;
-
-    fseek(archivoAutomovil, 0, SEEK_END);
-
-    int tam = ftell(archivoAutomovil);
-
-    fseek(archivoAutomovil, 0, SEEK_SET);
-
-    while (ftell(archivoAutomovil) < tam)
-
-    {
-
-        fread(&automovilActual, sizeof(Automovil), 1, archivoAutomovil);
-        printf("\nID: %d\nMarca: %s\n",
-        automovilActual.id, automovilActual.marca);
-    }
-
-}
-
-void capturarAlquilar(FILE* archivoAlquiler, Alquiler *alquiler)
+void capturarAlquiler(FILE* archivoAlquiler, Alquiler *alquiler)
 {
     printf("\nDigite el ID del Cliente: ");
     scanf("%d", &alquiler->id_Cliente);
@@ -181,67 +188,142 @@ void capturarAlquilar(FILE* archivoAlquiler, Alquiler *alquiler)
     fwrite(alquiler, sizeof(Alquiler), 1, archivoAlquiler);
 }
 
+// AUTOMOVILES
 
-void mostrarClientes(FILE *archivoClientes)
+void mostrarAutomoviles(FILE *archivoAutomovil)
+{
+    Automovil automovilActual;
+
+    fseek(archivoAutomovil, 0, SEEK_END);
+    int tam = ftell(archivoAutomovil);
+    fseek(archivoAutomovil, 0, SEEK_SET);
+
+    while (ftell(archivoAutomovil) < tam)
+    {
+        fread(&automovilActual, sizeof(Automovil), 1, archivoAutomovil);
+        printf("\nID: %d\nMarca: %s\n", automovilActual.id, automovilActual.marca);
+    }
+}
+
+void mostrarAutomovilesMarca(FILE* archivoAutomoviles, char *marca)
+{
+    Automovil automovilActual;
+    fseek(archivoAutomoviles, 0, SEEK_SET);
+
+    while (fread(&automovilActual, sizeof(Automovil), 1, archivoAutomoviles) == 1)
+    {
+        if (strcmp(automovilActual.marca, marca) == 0)
+            printf("\nID: %d\nMarca: %s\n\n", automovilActual.id, automovilActual.marca);
+    }
+}
+
+void mostrarAutomovilAlquilerMayorUnaSemana(FILE* ArchivoAlquiler)
+{
+    Alquiler alquilerActual;
+    fseek(ArchivoAlquiler, 0, SEEK_SET);
+
+    while (fread(&alquilerActual, sizeof(Alquiler), 1, ArchivoAlquiler) == 1)
+    {
+        if (alquilerActual.dias > 7)
+            printf("\nID del Cliente: %d\nID del Vehiculo: %d\nCantidad de días: %d\n\n", alquilerActual.id_Cliente, alquilerActual.id_vehiculo, alquilerActual.dias);
+    }
+}
+
+void mostrarAutomovilAlquilerEntreUnaSemanaDiezDias(FILE* archivoAlquiler)
+{
+    Alquiler alquilerActual;
+    fseek(archivoAlquiler, 0, SEEK_SET);
+
+    while (fread(&alquilerActual, sizeof(Alquiler), 1, archivoAlquiler) == 1)
+    {
+        if (alquilerActual.dias >= 7 && alquilerActual.dias <= 10)
+            printf("\nID del Cliente: %d\nID del Vehiculo: %d\nCantidad de días: %d\n\n", alquilerActual.id_Cliente, alquilerActual.id_vehiculo, alquilerActual.dias);
+    }
+}
+
+void mostrarAutomovilAlquilerMayorDiezMil(FILE* archivoAlquiler)
+{
+    Alquiler alquilerActual;
+    fseek(archivoAlquiler, 0, SEEK_SET);
+
+    while (fread(&alquilerActual, sizeof(Alquiler), 1, archivoAlquiler) == 1)
+    {
+        if (alquilerActual.precio > 10000)
+        {
+            printf("\nID del Cliente: %d\nID del Vehiculo: %d\nCantidad de días: %d\n\n",
+                alquilerActual.id_Cliente, alquilerActual.id_vehiculo, alquilerActual.dias);
+        }
+    }
+}
+
+// CLIENTES
+
+void mostrarClientes(int idAutomovil, FILE* archivoAlquiler, FILE *archivoClientes)
 {
     Cliente clienteActual;
+    Alquiler alquilerActual;
 
-    fseek(archivoClientes, 0, SEEK_END);
-    int tamano = ftell(archivoClientes);
-    fseek(archivoClientes, 0, SEEK_SET);
+    // fseek(archivoClientes, 0, SEEK_END);
+    // int tamano = ftell(archivoClientes);
+    // fseek(archivoClientes, 0, SEEK_SET);
 
-    while(ftell(archivoClientes) < tamano) // reemplazando el feof().
+    fseek(archivoAlquiler, 0, SEEK_SET);
+
+    while (fread(&alquilerActual, sizeof(Alquiler), 1, archivoAlquiler) == 1)
     {
-        fread(&clienteActual, sizeof(Cliente), 1, archivoClientes);
-
-        //if(strcmp(clienteActual.ciudad, ciudadFiltro) == 0)
-        printf("\nID: %d\nNombre: %s\nCiudad: %s\n",
-        clienteActual.id, clienteActual.nombre, clienteActual.ciudad);
+        if (alquilerActual.id_vehiculo == idAutomovil)
+        {
+            Cliente clienteActual;
+            fseek(archivoClientes, (alquilerActual.id_Cliente - 1) * sizeof(Cliente), SEEK_SET);
+            fread(&clienteActual, sizeof(Cliente), 1, archivoClientes);
+            printf("ID: %d\nNombre: %s\nCiudad: %s\n\n", clienteActual.id, clienteActual.nombre, clienteActual.ciudad);
+        }
     }
-
 }
 
 void mostrarClientes_Sant(FILE *archivoClientes)
 {
     Cliente clienteActual;
 
-    fseek(archivoClientes, 0, SEEK_END);
-    int tamano = ftell(archivoClientes);
+    //fseek(archivoClientes, 0, SEEK_END);
+    //int tamano = ftell(archivoClientes);
     fseek(archivoClientes, 0, SEEK_SET);
 
-    while(ftell(archivoClientes) < tamano) // reemplazando el feof().
+    while(fread(&clienteActual, sizeof(Cliente), 1, archivoClientes) == 1)
     {
-        fread(&clienteActual, sizeof(Cliente), 1, archivoClientes);
-
+        //fread(&clienteActual, sizeof(Cliente), 1, archivoClientes);
         if(strcmp(clienteActual.ciudad, "Santiago") == 0)
-        printf("\nID: %d\nNombre: %s\nCiudad: %s\n",
-        clienteActual.id, clienteActual.nombre, clienteActual.ciudad);
+            printf("\nID: %d\nNombre: %s\nCiudad: %s\n", clienteActual.id, clienteActual.nombre, clienteActual.ciudad);
     }
-
 }
 
 
 void mostrarClientes_Alquileres(FILE *archivoAlquiler) 
 {
     Alquiler alquilerActual;
-    //Cliente clienteActual;
-
-    fseek(archivoAlquiler, 0, SEEK_END);
-    int tamano = ftell(archivoAlquiler);
     fseek(archivoAlquiler, 0, SEEK_SET);
 
-
-    while (ftell(archivoAlquiler) < tamano) // reemplazando el feof().
+    while (fread(&alquilerActual, sizeof(Alquiler), 1, archivoAlquiler) == 1)
     {
-        fread(&alquilerActual, sizeof(Alquiler), 1, archivoAlquiler);
-
-        // if (alquilerActual.dias > 7) {
-        printf("\nID del Cliente: %d\nID del Vehiculo: %d\nCantidad de dias: %d\n",
-        alquilerActual.id_Cliente, alquilerActual.id_vehiculo, alquilerActual.dias);
+        if (alquilerActual.dias > 7)
+        {
+            printf("ID del Cliente: %d\nID del Vehiculo: %d\nCantidad de días: %d\n\n", alquilerActual.id_Cliente, alquilerActual.id_vehiculo, alquilerActual.dias);
+        }
     }
-
 }
 
+void mostrarClientes_EntreDiezDias(FILE* archivoAlquiler)
+{
+    Alquiler alquilerActual;
+    Cliente clienteActual;
+    fseek(archivoAlquiler, 0, SEEK_SET);
+
+    while (fread(&alquilerActual, sizeof(Alquiler), 1, archivoAlquiler) == 1)
+    {
+        if (alquilerActual.dias >= 7 && alquilerActual.dias <= 10)
+            printf("ID del Cliente: %d\nID del Vehiculo: %d\nCantidad de días: %d\nCiudad: %s\n\n", alquilerActual.id_Cliente, alquilerActual.id_vehiculo, alquilerActual.dias, clienteActual.ciudad);
+    }
+}
 
 void mostrarClientes_Alquiler_Precio(FILE *archivoAlquiler) 
 {
@@ -265,6 +347,7 @@ void mostrarClientes_Alquiler_Precio(FILE *archivoAlquiler)
     }
 }
 
+// Menú general
 
 int mostrarMenu()
 {
@@ -274,7 +357,7 @@ int mostrarMenu()
     printf("2: Capturar automovil.\n");
     printf("3: Registrar alquiler.\n");
     printf("4: Mostrar Clientes.\n");
-    printf("5: Mostrar Automoviles\n");
+    printf("5: Mostrar Automoviles.\n");
     printf("\n0: Salir.\n");
     printf("\nSeleccione: ");
     fflush(stdin);
@@ -297,16 +380,17 @@ int mostrarMenu()
     }
 }
 
+// Menú de los clientes
 
 int mostrarMenu2()
 {
-
-    printf("\n1) Todos los clientes.\n2) Todos los clientes de Santiago\n3) Todos los alquileres mayores de una semana.\n"
-    "4) Todos los alquileres por entre una semana y 10 dias, agrupandolos por la ciudad del cliente.\n"
-    "5) Todos los alquileres por un valor total superior a $10,000, agrupandolos por la cantidad de dias alquilados, de la siguiente manera:\n"
-    "\ta) Entre 1-7 dias"
-    "\tb) Entre 8-10 dias"
-    "\tc) Por mas de 10 dias.\n Cual quiere seleccionar?");
+    printf("\n1) Todos los clientes.");
+    printf("\n2) Todos los clientes de Santiago.");
+    printf("\n3) Todos los alquileres mayores de una semana.");
+    printf("\n4) Todos los alquileres por entre una semana y 10 dias, agrupandolos por la ciudad del cliente. ");
+    printf("\n5) Todos los alquileres por un valor total superior a $10,000, agrupados por la cantidad de dias alquilados, de la siguiente manera:");
+    printf("\n\ta) Entre 1-7 dias \tb) Entre 8-10 dias \tc) Por mas de 10 dias");
+    printf("\n\nRespuesta: ");
 
     char opciones;
 
@@ -330,11 +414,16 @@ int mostrarMenu2()
     }
 }
 
+// Menú de los automóviles
+
 int mostrarMenu3()
 {
-    printf("1) Todos los automoviles. \n 2) Todos los automoviles de una marca especifica \n 3)Todos los alquileres mayores de una semana.\n"
-    "4) Todos los alquileres por entre una semana y 10 dias\n 5) Todos los alquileres por un valor total superior a $10,000.\n"
-    "Cual quiere seleccionar?");
+    printf("\n1) Todos los automoviles. ");
+    printf("\n2) Todos los automoviles de una marca especifica. ");
+    printf("\n3) Todos los alquileres mayores de una semana. ");
+    printf("\n4) Todos los alquileres por entre una semana y 10 dias. ");
+    printf("\n5) Todos los alquileres por un valor total superior a $10,000.");
+    printf("\n\nRespuesta: ");
 
     char opciones2;
     fflush(stdin);
@@ -359,7 +448,4 @@ int mostrarMenu3()
     }
 
 }
-
-// tiene menú contextual
-// Redactar
 
