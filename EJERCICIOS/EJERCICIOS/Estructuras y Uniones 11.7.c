@@ -23,7 +23,6 @@ Por último, declare una estructura que pueda representar a un profesor o un alu
 
 */
 
-
 typedef struct 
 {
     char nombre[30];

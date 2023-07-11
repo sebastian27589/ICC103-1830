@@ -11,7 +11,6 @@ struct hormiga
    float tiempo;
 }hormiga colonia[100];
 
-
 int main()
 {
 
