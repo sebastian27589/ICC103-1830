@@ -42,7 +42,6 @@ int Diferencia (Fecha fecha1, Fecha fecha2)
     int dif, diasFecha1, diasFecha2;
 
     // Fórmula para calcular los días de los meses //
-
     // Toma el mes y le resta 1 para sacar los meses anteriores al último mes ingresado. 
     
     diasFecha1 = (fecha1.mes - 1)*30 + fecha1.dia; 

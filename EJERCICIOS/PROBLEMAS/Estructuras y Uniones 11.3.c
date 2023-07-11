@@ -4,11 +4,11 @@
 
 /*
 
-Modifique el programa de facturación de clientes de tal modo que se puedan obtener los
-siguientes listados.
+    Modifique el programa de facturación de clientes de tal modo que se puedan obtener los
+    siguientes listados.
 
-    -Clientes en estado moroso.
-    -Clientes en estado pagado con factura mayor de una determinada cantidad.
+        -Clientes en estado moroso.
+        -Clientes en estado pagado con factura mayor de una determinada cantidad.
 
 */
 

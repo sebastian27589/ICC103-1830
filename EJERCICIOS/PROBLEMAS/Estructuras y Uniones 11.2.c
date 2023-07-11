@@ -4,21 +4,21 @@
 
 /*
 
-Escriba un programa de facturación de clientes.
-Los clientes tienen:
+    Escriba un programa de facturación de clientes.
+    Los clientes tienen:
 
--   Nombre
--   Núm. Unidades 
--   Precio 
--   Estado 
+    -   Nombre
+    -   Núm. Unidades 
+    -   Precio 
+    -   Estado 
 
-Estado debe ser:
+    Estado debe ser:
 
--   Moroso
--   Atrasado
--   Pagado
+    -   Moroso
+    -   Atrasado
+    -   Pagado
 
-Debe generar a los diversos clientes.
+    Debe generar a los diversos clientes.
 
 */
 
