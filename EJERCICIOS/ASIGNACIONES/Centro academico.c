@@ -88,7 +88,7 @@ typedef struct
 
 // Funciones del estudiante
 void guardarEstudiantesEnArchivo(CentroEducativo*); // Modificada
-void ordenarEstudiantesPorID(Estudiante**); // Función para ordenar IDs
+void ordenarEstudiantesPorID(Estudiante**); 
 void mostrarEstudiantes(CentroEducativo*);
 void crearOcargarArchivoEstudiantes(CentroEducativo*); // Modificada
 int mostrarMenuEstudiante();
@@ -109,26 +109,26 @@ void inactivarAsignatura(CentroEducativo*); // Modificada
 void mostrarAsignaturasConInactividad(FILE*); // Modificada
 
 // Funciones de la actividad
-void guardarActividadesEnArchivo(CentroEducativo*);
-void ordenarActividadesPorID(Actividad Actividades[], int);
-void mostrarActividades(CentroEducativo*, int);
-void crearOcargarArchivoActividades(CentroEducativo*);
+void guardarActividadesEnArchivo(CentroEducativo*); // Modificada
+void ordenarActividadesPorID(Actividad Actividades[], int); // Modificada
+void mostrarActividades(CentroEducativo*, int); // Modificada
+void crearOcargarArchivoActividades(CentroEducativo*); // Modificada
 int mostrarMenuActividad();
 void crearActividad(CentroEducativo*);
-void modificarActividad(CentroEducativo*);
-void inactivarActividad(CentroEducativo*);
-void mostrarActividadesConInactividad(FILE*);
+void modificarActividad(CentroEducativo*); // Modificada
+void inactivarActividad(CentroEducativo*); // Modificada
+void mostrarActividadesConInactividad(FILE*); // Modificada
 
 // Funciones de la calificación
-void guardarCalificacionesEnArchivo(CentroEducativo*);
-void ordenarCalificacionesPorID();
-void mostrarCalificaciones(CentroEducativo*);
-void crearOcargarArchivoCalificaciones(CentroEducativo*);
+void guardarCalificacionesEnArchivo(CentroEducativo*); // Modificada
+void ordenarCalificacionesPorID(); // Modificada
+void mostrarCalificaciones(CentroEducativo*); // Modificada
+void crearOcargarArchivoCalificaciones(CentroEducativo*); 
 int mostrarMenuCalificacion();
-void crearCalificacion(CentroEducativo*);
-void modificarCalificacion(CentroEducativo*);
-void inactivarCalificacion(CentroEducativo*);
-void mostrarCalificacionesConInactividad(FILE*);
+void crearCalificacion(CentroEducativo*); // Modificada
+void modificarCalificacion(CentroEducativo*); // Modificada
+void inactivarCalificacion(CentroEducativo*); // Modificada
+void mostrarCalificacionesConInactividad(FILE*); // Modificada
 
 // Funciones crear estudiante con asignatura
 int mostrarMenuEstudiantesInscritos();
@@ -356,12 +356,11 @@ void modificarEstudiante(CentroEducativo* centroEducativo)
     {
         Estudiante* estudiante = centroEducativo->listaEstudiantes;
 
-        // Obtener el estudiante seleccionado
+        // Verificar si el ID ya está registrado
         while (estudiante != NULL)
         {
             if (estudiante->ID == indiceSeleccionado)
             {
-
                 // Datos actuales del estudiante
                 printf("\nDatos actuales del estudiante:\n");
                 printf("ID: [%d]\n", estudiante->ID);
@@ -370,39 +369,50 @@ void modificarEstudiante(CentroEducativo* centroEducativo)
                 printf("Apellidos: [%s]\n", estudiante->Apellidos);
                 printf("Carrera: [%s]\n", estudiante->Carrera);
 
-                // Escribir nuevos datos del estudiante
-                printf("\nIngrese los nuevos datos del estudiante.\n");
-                printf("ID: ");
-                scanf("%d", &estudiante->ID);
-                
-                // Verificar si el ID ya está registrado
-                for (Estudiante* estudianteActual = centroEducativo->listaEstudiantes; estudianteActual != NULL; estudianteActual = estudianteActual->siguiente)
+                // Variables para almacenar los nuevos datos del estudiante
+                int nuevoID;
+                char nuevaMatricula[9];
+
+                // Obtener los nuevos datos del estudiante
+                // Se verifica si el ID o la matrícula ya existen antes de solicitar los nuevos datos
+                do
                 {
-                    if (estudianteActual->ID == estudiante->ID)
+                    printf("\nIngrese los nuevos datos del estudiante.\n");
+                    printf("ID: ");
+                    scanf("%d", &nuevoID);
+
+                    // Verificar si el ID ya está registrado
+                    Estudiante* estudianteActual = centroEducativo->listaEstudiantes;
+                    while (estudianteActual != NULL)
                     {
-                        printf("ERROR: El ID del estudiante ya está registrado. Ingrese un ID único.\n");
-                        free(estudiante);
-                        return;
+                        if (estudianteActual->ID == nuevoID && estudianteActual != estudiante)
+                        {
+                            printf("ERROR: El ID del estudiante ya está registrado. Ingrese un ID único.\n");
+                            return;
+                        }
+                        estudianteActual = estudianteActual->siguiente;
                     }
-                }
-                
+                } while (nuevoID <= 0);
+
                 printf("Matricula: ");
-                scanf("%s", estudiante->Matricula);
+                scanf("%s", nuevaMatricula);
 
                 // Verificar si la matrícula ya está registrada
-                for (Estudiante* estudianteActual = centroEducativo->listaEstudiantes; estudianteActual != NULL; estudianteActual = estudianteActual->siguiente)
+                Estudiante* estudianteActual = centroEducativo->listaEstudiantes;
+                while (estudianteActual != NULL)
                 {
-                    if (strcmp(estudianteActual->Matricula, estudiante->Matricula) == 0)
+                    if (strcmp(estudianteActual->Matricula, nuevaMatricula) == 0 && estudianteActual != estudiante)
                     {
                         printf("ERROR: La matrícula ya está registrada por otro estudiante. Ingrese una matrícula única.\n");
-                        free(estudiante);
                         return;
                     }
+                    estudianteActual = estudianteActual->siguiente;
                 }
 
                 printf("Nombres: ");
                 fflush(stdin);
                 gets(estudiante->Nombres);
+
                 printf("Apellidos: ");
                 fflush(stdin);
                 gets(estudiante->Apellidos);
@@ -419,17 +429,20 @@ void modificarEstudiante(CentroEducativo* centroEducativo)
                     }
                 } while (strlen(estudiante->Carrera) > 5);
 
+                // Actualizar los datos del estudiante con los nuevos valores
+                estudiante->ID = nuevoID;
+                strcpy(estudiante->Matricula, nuevaMatricula);
+
                 guardarEstudiantesEnArchivo(centroEducativo);
 
-                printf("\nEstudiante modificado con exito.\n");
+                printf("\nEstudiante modificado con éxito.\n");
                 return;
             }
 
-            estudiante = estudiante->siguiente; 
-
+            estudiante = estudiante->siguiente;
         }
 
-        printf("\nERROR: no se encontro un estudiante con el ID especificado.\n");
+        printf("\nERROR: No se encontró un estudiante con el ID especificado.\n");
     }
 }
 
@@ -535,7 +548,7 @@ void mostrarAsignaturas(Asignatura* listaAsignaturas)
     // Recorrer la lista de asignaturas y mostrar sus datos
     while (asignaturaActual != NULL)
     {
-        if (asignaturaActual->Inactivo == 0)
+         if (asignaturaActual->Inactivo == 0)
             printf("[%-4d] [%-11s] [%-19s] [%-11d]\n", asignaturaActual->ID, asignaturaActual->Codigo, asignaturaActual->Nombre, asignaturaActual->Creditos);
         else
             contadorAsignaturasInactivas++;
@@ -600,10 +613,73 @@ void crearAsignatura(CentroEducativo* centroEducativo)
     printf("Asignatura creada con exito.\n\n");
 }
 
+// void modificarAsignatura(CentroEducativo* centroEducativo)
+// {
+//     int idAsignatura;
+
+//     printf("Ingrese el ID de la asignatura que desea modificar (0 para salir): ");
+//     scanf("%d", &idAsignatura);
+
+//     if (idAsignatura != 0)
+//     {
+//         Asignatura* asignatura = centroEducativo->listaAsignaturas;
+
+//         // Obtener la asignatura seleccionada
+//         while (asignatura != NULL)
+//         {
+//             if (asignatura->ID == idAsignatura)
+//             {
+//                 // Datos actuales de la asignatura
+//                 printf("\nDatos actuales de la asignatura:\n");
+//                 printf("ID: [%d]\n", asignatura->ID);
+//                 printf("Codigo: [%s]\n", asignatura->Codigo);
+//                 printf("Nombre: [%s]\n", asignatura->Nombre);
+//                 printf("Creditos: [%d]\n", asignatura->Creditos);
+
+//                 // Escribir nuevos datos de la asignatura
+//                 printf("\nIngrese los nuevos datos de la asignatura.\n");
+//                 printf("ID: ");
+//                 scanf("%d", &asignatura->ID);
+
+//                 // Verificar si el ID ya está registrado
+//                 for (Asignatura* asignaturaActual = centroEducativo->listaAsignaturas; asignaturaActual != NULL; asignaturaActual = asignaturaActual->siguiente)
+//                 {
+//                     if (asignaturaActual->ID == asignatura->ID)
+//                     {
+//                         printf("ERROR: El ID de la asignatura ya está registrada. Ingrese un ID único.\n");
+//                         free(asignatura);
+//                         return;
+//                     }
+//                 }
+                
+//                 printf("Codigo: ");
+//                 fflush(stdin);
+//                 gets(asignatura->Codigo);
+                
+//                 printf("Nombre: ");
+//                 fflush(stdin);
+//                 gets(asignatura->Nombre);
+                
+//                 printf("Creditos: ");
+//                 scanf("%d", &asignatura->Creditos);
+    
+//                 guardarAsignaturasEnArchivo(centroEducativo);
+
+//                 printf("\nAsignatura modificada con exito.\n");
+//                 return;
+//             }
+
+//             asignatura = asignatura->siguiente; 
+
+//         }
+
+//         printf("\nERROR: no se encontro una asignatura con el ID especificado.\n");
+//     }
+// }
+
 void modificarAsignatura(CentroEducativo* centroEducativo)
 {
     int idAsignatura;
-
     printf("Ingrese el ID de la asignatura que desea modificar (0 para salir): ");
     scanf("%d", &idAsignatura);
 
@@ -616,6 +692,9 @@ void modificarAsignatura(CentroEducativo* centroEducativo)
         {
             if (asignatura->ID == idAsignatura)
             {
+                // Guardar el ID original en una variable temporal
+                int idOriginal = asignatura->ID;
+
                 // Datos actuales de la asignatura
                 printf("\nDatos actuales de la asignatura:\n");
                 printf("ID: [%d]\n", asignatura->ID);
@@ -623,22 +702,25 @@ void modificarAsignatura(CentroEducativo* centroEducativo)
                 printf("Nombre: [%s]\n", asignatura->Nombre);
                 printf("Creditos: [%d]\n", asignatura->Creditos);
 
-                // Escribir nuevos datos de la asignatura
+                // Modificar los datos de la asignatura
                 printf("\nIngrese los nuevos datos de la asignatura.\n");
                 printf("ID: ");
                 scanf("%d", &asignatura->ID);
 
-                // Verificar si el ID ya está registrado
-                for (Asignatura* asignaturaActual = centroEducativo->listaAsignaturas; asignaturaActual != NULL; asignaturaActual = asignaturaActual->siguiente)
+                // Verificar si el nuevo ID ya está registrado en otra asignatura activa
+                if (idOriginal != asignatura->ID) // Se modificó el ID
                 {
-                    if (asignaturaActual->ID == asignatura->ID)
+                    for (Asignatura* otraAsignatura = centroEducativo->listaAsignaturas; otraAsignatura != NULL; otraAsignatura = otraAsignatura->siguiente)
                     {
-                        printf("ERROR: El ID de la asignatura ya está registrada. Ingrese un ID único.\n");
-                        free(asignatura);
-                        return;
+                        if (otraAsignatura->Inactivo == 0 && otraAsignatura->ID == asignatura->ID)
+                        {
+                            printf("ERROR: El ID de la asignatura ya está registrado. Ingrese un ID único.\n");
+                            asignatura->ID = idOriginal; // Restaurar el ID original
+                            return;
+                        }
                     }
                 }
-                
+
                 printf("Codigo: ");
                 fflush(stdin);
                 gets(asignatura->Codigo);
@@ -649,18 +731,18 @@ void modificarAsignatura(CentroEducativo* centroEducativo)
                 
                 printf("Creditos: ");
                 scanf("%d", &asignatura->Creditos);
-    
+
+                // Guardar los cambios en el archivo
                 guardarAsignaturasEnArchivo(centroEducativo);
 
-                printf("\nAsignatura modificada con exito.\n");
+                printf("\nAsignatura modificada con éxito.\n");
                 return;
             }
 
-            asignatura = asignatura->siguiente; 
-
+            asignatura = asignatura->siguiente;
         }
 
-        printf("\nERROR: no se encontro una asignatura con el ID especificado.\n");
+        printf("\nERROR: no se encontró una asignatura con el ID especificado.\n");
     }
 }
 
@@ -1123,7 +1205,9 @@ void mostrarCalificacionesConInactividad(FILE* archivo)
     printf("=========================================\n");
 }
 
+
 // ACTIVIDADES
+
 
 void crearActividad(CentroEducativo* centroEducativo)
 {
@@ -1135,19 +1219,21 @@ void crearActividad(CentroEducativo* centroEducativo)
     scanf("%d", &idAsignatura);
 
     // Buscar la asignatura en el arreglo de asignaturas
-    int indiceAsignatura = -1;
-    for (int i = 0; i < centroEducativo->numAsignaturas; i++)
+    Asignatura* asignaturaEncontrada = NULL;
+    Asignatura* asignaturaActual = centroEducativo->listaAsignaturas;
+
+    while (asignaturaActual != NULL)
     {
-        if (centroEducativo->listaAsignaturas[i].ID == idAsignatura)
+        if (asignaturaActual->ID == idAsignatura)
         {
-            indiceAsignatura = i;
+            asignaturaEncontrada = asignaturaActual;
             break;
         }
+        asignaturaActual = asignaturaActual->siguiente;
     }
 
-    if (indiceAsignatura != -1)
+    if (asignaturaEncontrada != NULL)
     {
-
         printf("\n [Creando actividad...] \n");
         printf("Ingrese el ID de la actividad a crear: ");
         scanf("%d", &nuevaActividad.ID);
@@ -1157,8 +1243,7 @@ void crearActividad(CentroEducativo* centroEducativo)
         {
             if (actividadActual->ID == nuevaActividad.ID)
             {
-                printf("ERROR: El ID del estudiante ya está registrado. Ingrese un ID único.\n");
-                //free(nuevaActividad);
+                printf("ERROR: El ID de la actividad ya está registrado. Ingrese un ID único.\n");
                 return;
             }
         }
@@ -1191,11 +1276,11 @@ void crearActividad(CentroEducativo* centroEducativo)
         // Guardar los cambios en el archivo de actividades
         guardarActividadesEnArchivo(centroEducativo);
 
-        printf("Actividad creada con exito.\n\n");
+        printf("Actividad creada con éxito.\n\n");
     }
     else
     {
-        printf("ERROR: El ID de la asignatura no es valido.\n");
+        printf("ERROR: El ID de la asignatura no es válido.\n");
     }
 }
 
@@ -1230,16 +1315,6 @@ void modificarActividad(CentroEducativo* centroEducativo)
             printf("Ingrese el nuevo ID: ");
             scanf("%d", &actividadActual->ID);
 
-            // Verificar si el ID ya está registrado
-            for (Actividad* nodoActividad = centroEducativo->listaActividades; nodoActividad != NULL; nodoActividad = nodoActividad->siguiente)
-            {
-                if (actividadActual->ID == nodoActividad->ID)
-                {
-                    printf("ERROR: El ID del estudiante ya está registrado. Ingrese un ID único.\n");
-                    free(nodoActividad);
-                    return;
-                }
-            }
             printf("\nIngrese el nuevo nombre de la actividad: ");
             fflush(stdin);
             gets(actividadActual->Nombre);
@@ -1277,23 +1352,26 @@ void inactivarActividad(CentroEducativo* centroEducativo)
     mostrarAsignaturas(centroEducativo->listaAsignaturas);
 
     int idAsignatura;
-
     printf("Ingrese el ID de la asignatura para mostrar sus actividades: ");
     scanf("%d", &idAsignatura);
 
-    int indiceAsignatura = -1;
-    for (int i = 0; i < centroEducativo->numAsignaturas; i++)
+    // Buscar la asignatura en la lista de asignaturas
+    Asignatura* asignaturaEncontrada = NULL;
+    Asignatura* asignaturaActual = centroEducativo->listaAsignaturas;
+
+    while (asignaturaActual != NULL)
     {
-        if (centroEducativo->listaAsignaturas[i].ID == idAsignatura)
+        if (asignaturaActual->ID == idAsignatura)
         {
-            indiceAsignatura = i;
+            asignaturaEncontrada = asignaturaActual;
             break;
         }
+        asignaturaActual = asignaturaActual->siguiente;
     }
 
-    if (indiceAsignatura != -1)
+    if (asignaturaEncontrada != NULL)
     {
-        printf("\nActividades de la asignatura '%s':\n", centroEducativo->listaAsignaturas[indiceAsignatura].Nombre);
+        printf("\nActividades de la asignatura '%s':\n", asignaturaEncontrada->Nombre);
         printf("=============================================\n");
         printf("ID   NOMBRE                  ESTADO\n");
         printf("=============================================\n");
@@ -1340,19 +1418,19 @@ void inactivarActividad(CentroEducativo* centroEducativo)
                         printf("Actividad con ID [%d] activada exitosamente.\n", idActividad);
 
                     return;
-
                 }
 
                 nodoAnterior = nodoActual;
                 nodoActual = nodoActual->siguiente;
-                
             }
 
-            printf("ERROR: No se encontro una actividad valida con el ID especificado.\n");
+            printf("ERROR: No se encontró una actividad válida con el ID especificado.\n");
         }
     }
     else
-        printf("ERROR: El ID de la asignatura no es valido.\n");
+    {
+        printf("ERROR: El ID de la asignatura no es válido.\n");
+    }
 
     fclose(archivoAsignaturas);
     fclose(archivoActividades);
@@ -1383,9 +1461,9 @@ void guardarActividadesEnArchivo(CentroEducativo* centroEducativo)
 
 void mostrarActividades(CentroEducativo* centroEducativo, int idAsignatura)
 {
-    printf("\n==================\n");
+    printf("\n==========================================\n");
     printf("ID   NOMBRE\n");
-    printf("==================\n");
+    printf("==========================================\n");
 
     Actividad* nodoActual = centroEducativo->listaActividades;
     while (nodoActual != NULL)
@@ -1438,6 +1516,7 @@ void crearOcargarArchivoActividades(CentroEducativo* centroEducativo)
         *nodoActividad = actividad;
         nodoActividad->siguiente = centroEducativo->listaActividades;
         centroEducativo->listaActividades = nodoActividad;
+
         centroEducativo->numActividades++;
         
     }
@@ -1445,25 +1524,25 @@ void crearOcargarArchivoActividades(CentroEducativo* centroEducativo)
     fclose(archivo);
 }
 
-void ordenarActividadesPorID(Actividad actividades[], int numActividades)
-{
-    int i, j;
-    Actividad temp;
+// void ordenarActividadesPorID(Actividad actividades[], int numActividades)
+// {
+//     int i, j;
+//     Actividad temp;
 
-    for (i = 0; i < numActividades - 1; i++)
-    {
-        for (j = 0; j < numActividades - i - 1; j++)
-        {
-            if (actividades[j].ID > actividades[j + 1].ID)
-            {
-                                                        // Intercambiar actividades[j] con actividades[j + 1]
-                temp = actividades[j];
-                actividades[j] = actividades[j + 1];
-                actividades[j + 1] = temp;
-            }
-        }
-    }
-}
+//     for (i = 0; i < numActividades - 1; i++)
+//     {
+//         for (j = 0; j < numActividades - i - 1; j++)
+//         {
+//             if (actividades[j].ID > actividades[j + 1].ID)
+//             {
+//                                                         // Intercambiar actividades[j] con actividades[j + 1]
+//                 temp = actividades[j];
+//                 actividades[j] = actividades[j + 1];
+//                 actividades[j + 1] = temp;
+//             }
+//         }
+//     }
+// }
 
 int main()
 {
@@ -1517,7 +1596,7 @@ int main()
                     crearEstudiante(&centroEducativo);
                     printf("Presiona enter para continuar...\n");
                     getchar();                          // Leer un caracter adicional (salto de linea)
-                    getchar();                          // Esperar una tecla antes de limpiar la pantalla
+                    //getchar();                          // Esperar una tecla antes de limpiar la pantalla
                     //system("cls");                      // Limpiar la pantalla
                     break;
                 case 2:
@@ -1760,7 +1839,7 @@ int main()
         guardarAsignaturasEnArchivo(&centroEducativo);
         guardarActividadesEnArchivo(&centroEducativo);
         guardarCalificacionesEnArchivo(&centroEducativo);
-        guardarInscripcionesEnArchivo(&centroEducativo);
+        //guardarInscripcionesEnArchivo(&centroEducativo);
 
     }
     while (opcionPrincipal != 4);
